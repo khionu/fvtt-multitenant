@@ -1,7 +1,7 @@
 {
-  inputs = {};
+  inputs.nixpkgs.url = "github:NixOS/nixpkgs";
 
-  outputs = {
+  outputs = { ... }: {
     nixosModules.fvtt-multitenant = { config, lib, ... }: {
       options.fvtt-multitenant.enable =
         lib.mkEnableOption "enable Khionu's Multitenant Foundry setup";
