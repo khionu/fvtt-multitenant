@@ -11,7 +11,6 @@
         lib.mkEnableOption "enable Khionu's Multitenant Foundry setup";
 
       config = lib.mkIf config.fvtt-multitenant.enable {
-        services.nomad.enable = true;
         services.nomad = {
           enable = true;
           extraSettingsPlugins = [
