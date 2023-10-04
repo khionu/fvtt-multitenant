@@ -6,7 +6,7 @@
   };
 
   outputs = { nixpkgs, disko, ... }: {
-    nixosModules.aio = { config, lib, ... }: {
+    nixosModules.aio = { pkgs, config, lib, ... }: {
       options.fvtt-multitenant.enable =
         lib.mkEnableOption "enable Khionu's Multitenant Foundry setup";
 
