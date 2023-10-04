@@ -20,7 +20,7 @@
 
 - :snowflake: NixOS Flake :snowflake:
 - Keep this repo relatively agnostic to deployment context - cloud or baremetal should take zero tweaking.
-- Wrap [disko] to setup global and per-instance storage for Foundry.
+- Wrap [disko] to setup global and per-instance ZFS datasets for Foundry.
   - `/shared` - mounted ro to `/opt/fvtt/data/shared/` per instance, mounted rw to `/opt/fvtt/shared` on host.
   - `/instances/<id>/data` - mounted to `/opt/fvtt/data/` per instance.
   - `/instances/<id>/install` - mounted to `/opt/fvtt/install/` per instance.
