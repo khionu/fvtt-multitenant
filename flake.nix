@@ -6,7 +6,7 @@
   };
 
   outputs = { nixpkgs, disko, ... }: {
-    nixosModules.aio = { pkgs, config, lib, ... }: {
+    nixosModules.aio = { self, pkgs, config, lib, ... }: {
       options.fvtt-multi = with lib; {
         enable =
           mkEnableOption "enable Khionu's Multitenant Foundry setup";
@@ -49,22 +49,29 @@
           after = [ "nomad.service" ];
           description = "Ensure we have deployed critical Nomad services";
           serviceConfig.Type = "oneshot";
-          script = ''
-            #!${pkgs.nushell}/bin/nu
-
-            if not ("/root/nomad/bootstrap" | path exists) {
-              mkdir /root/nomad
-              ${pkgs.nomad}/bin/nomad acl bootstrap |
-                lines | parse '{name} = {value}' | str trim | transpose -rd |
-                to json | save -f /root/nomad/bootstrap
-            }
-
-            $env.NOMAD_TOKEN = open /root/nomad/bootstrap | get "Secret ID"
-
-            let policies = nomad acl policy list -json | from json
-          '';
+          script = "${self.packages."x86_64-linux".bootstrap-nomad}/bin/bootstrap-nomad";
         };
       };
     };
+    packages."x86_64-linux".bootstrap-nomad = { writeTextFile, nushell, nomad }:
+      writeTextFile {
+        name = "bootstrap-nomad";
+        executable = true;
+        destination = "/bin/boostrap-nomad";
+        text = ''
+          #!${nushell}/bin/nu
+
+          if not ("/root/nomad/bootstrap" | path exists) {
+            mkdir /root/nomad
+            ${nomad}/bin/nomad acl bootstrap |
+              lines | parse '{name} = {value}' | str trim | transpose -rd |
+              to json | save -f /root/nomad/bootstrap
+          }
+
+          $env.NOMAD_TOKEN = open /root/nomad/bootstrap | get "Secret ID"
+
+          let policies = nomad acl policy list -json | from json
+        '';
+      };
   };
 }
