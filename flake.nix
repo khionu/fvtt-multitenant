@@ -7,7 +7,7 @@
 
   outputs = { nixpkgs, disko, ... }: {
     nixosModules.aio = { pkgs, config, lib, ... }: {
-      options.fvtt-multitenant = {
+      options.fvtt-multi = {
         enable =
           lib.mkEnableOption "enable Khionu's Multitenant Foundry setup";
         availableInstanceDomains = lib.mkOption {
@@ -20,9 +20,7 @@
         };
       };
 
-      fvtt-mt = config.fvtt-multitenant;
-
-      config = lib.mkIf fvtt-mt.enable {
+      config = lib.mkIf fvtt-multi.enable {
         services.nomad = {
           enable = true;
           extraSettingsPlugins = [
