@@ -44,7 +44,7 @@
           }{{- end }}
         '';
 
-        systemd.units.bootstrap-nomad = {
+        systemd.services.bootstrap-nomad = {
           enable = true;
           after = [ "nomad.service" ];
           description = "Ensure we have deployed critical Nomad services";
