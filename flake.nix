@@ -20,7 +20,7 @@
         };
       };
 
-      config = lib.mkIf fvtt-multi.enable {
+      config = lib.mkIf config.fvtt-multi.enable {
         services.nomad = {
           enable = true;
           extraSettingsPlugins = [
