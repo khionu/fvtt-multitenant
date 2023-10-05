@@ -5,8 +5,8 @@
     inputs.nixpkgs.follows = "nixpkgs";
   };
 
-  outputs = { nixpkgs, disko, ... }: {
-    nixosModules.aio = { self, pkgs, config, lib, ... }: {
+  outputs = { self, nixpkgs, disko, ... }: {
+    nixosModules.aio = { pkgs, config, lib, ... }: {
       options.fvtt-multi = with lib; {
         enable =
           mkEnableOption "enable Khionu's Multitenant Foundry setup";
