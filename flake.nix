@@ -7,16 +7,16 @@
 
   outputs = { nixpkgs, disko, ... }: {
     nixosModules.aio = { pkgs, config, lib, ... }: {
-      options.fvtt-multi = {
+      options.fvtt-multi = with lib; {
         enable =
-          lib.mkEnableOption "enable Khionu's Multitenant Foundry setup";
-        availableInstanceDomains = lib.mkOption {
-          type = listOf string;
-          description = lib.mdDoc "Domains that instances can be subdomains of";
+          mkEnableOption "enable Khionu's Multitenant Foundry setup";
+        availableInstanceDomains = mkOption {
+          type = types.listOf string;
+          description = mdDoc "Domains that instances can be subdomains of";
         };
         adminDomain = lib.mkOption {
           type = string;
-          description = lib.mdDoc "Domain that admin services will be of. Must have a wildcard record";
+          description = mdDoc "Domain that admin services will be of. Must have a wildcard record";
         };
       };
 
