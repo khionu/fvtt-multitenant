@@ -61,15 +61,15 @@
 
         environment.etc."fvtt-mt/provided_settings.json" = {
           text = builtins.toJson config.fvtt-multi;
-          mode = 0444;
+          mode = "0444";
         };
         environment.etc."fvtt-mt/Caddyfile.tpl" = {
           source = ./services/caddy.tpl;
-          mode = 0444;
+          mode = "0444";
         };
         environment.etc."fvtt-mt/nomad/services/caddy.nomad.hcl" = {
           source = ./services/caddy.nomad.hcl;
-          mode = 0444;
+          mode = "0444";
         };
 
         systemd.services.bootstrap-nomad = {
