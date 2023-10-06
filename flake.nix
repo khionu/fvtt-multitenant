@@ -4,8 +4,19 @@
     url = "github:nix-community/disko";
     inputs.nixpkgs.follows = "nixpkgs";
   };
+  inputs.nuenv = {
+    url = "github:DeterminateSystems/nuenv";
+    inputs.nixpkgs.follows = "nixpkgs";
+  };
 
-  outputs = { self, nixpkgs, disko, ... }: {
+  outputs = { self, nixpkgs, disko, nuenv, ... }: let
+    overlays = [ nuenv.overlays.default ];
+    systems = [ "x86_64-linux" "aarch64-linux" ];
+    forAllSystems = f: nixpkgs.lib.genAttrs systems (system: f {
+      inherit system;
+      pkgs = import nixpkgs { inherit system; };
+    }); 
+  in {
     nixosModules.aio = { pkgs, config, lib, ... }: {
       options.fvtt-multi = with lib; {
         enable =
@@ -53,17 +64,13 @@
         };
       };
     };
-    packages."x86_64-linux".bootstrap-nomad = { writeTextFile, nushell, nomad }:
-      writeTextFile {
+    packages = forAllSystems ({ pkgs, system }: {
+      bootstrap-nomad = pkgs.nuenv.writeScriptBin {
         name = "bootstrap-nomad";
-        executable = true;
-        destination = "/bin/boostrap-nomad";
-        text = ''
-          #!${nushell}/bin/nu
-
+        script = ''
           if not ("/root/nomad/bootstrap" | path exists) {
             mkdir /root/nomad
-            ${nomad}/bin/nomad acl bootstrap |
+            ${pkgs.nomad}/bin/nomad acl bootstrap |
               lines | parse '{name} = {value}' | str trim | transpose -rd |
               to json | save -f /root/nomad/bootstrap
           }
@@ -73,5 +80,6 @@
           let policies = nomad acl policy list -json | from json
         '';
       };
+    });
   };
 }
