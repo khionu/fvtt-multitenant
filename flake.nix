@@ -34,9 +34,6 @@
       config = lib.mkIf config.fvtt-multi.enable {
         services.nomad = {
           enable = true;
-          extraSettingsPlugins = [
-            pkgs.nomad-driver-podman
-          ];
           settings = {
             ui.enabled = true;
             acl.enabled = true;
@@ -47,13 +44,15 @@
             client.enabled = true;
           };
         };
-        environment.etc."fvtt-mt/Caddyfile.tpl".text = ''
-          {{- range nomadService "fvtt-instance" }}
-          {{ .Domain }} {
-            redir / /-/ permanent
-            reverse_proxy /-/* {{ .FvttDestination }}
-          }{{- end }}
-        '';
+
+        environment.etc."fvtt-mt/Caddyfile.tpl" = {
+          source = ./services/caddy.tpl;
+          mode = 0444;
+        };
+        environment.etc."fvtt-mt/nomad/services/caddy.nomad.hcl" = {
+          source = ./services/caddy.nomad.hcl;
+          mode = 0444;
+        };
 
         systemd.services.bootstrap-nomad = {
           enable = true;
@@ -72,10 +71,10 @@
             mkdir /root/nomad
             ${pkgs.nomad}/bin/nomad acl bootstrap |
               lines | parse '{name} = {value}' | str trim | transpose -rd |
-              to json | save -f /root/nomad/bootstrap
+              to json | save -f "/root/nomad/bootstrap"
           }
 
-          $env.NOMAD_TOKEN = open /root/nomad/bootstrap | get "Secret ID"
+          $env.NOMAD_TOKEN = "/root/nomad/bootstrap" | open | get "Secret ID"
 
           let policies = nomad acl policy list -json | from json
         '';
