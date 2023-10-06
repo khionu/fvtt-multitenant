@@ -22,24 +22,24 @@
         enable =
           mkEnableOption "enable Khionu's Multitenant Foundry setup";
         availableInstanceDomains = mkOption {
-          type = types.listOf string;
+          type = types.listOf types.string;
           description = mdDoc "Domains that instances can be subdomains of";
         };
         adminDomain = mkOption {
-          type = string;
+          type = types.string;
           description = mdDoc "Domain that admin services will be of. Must have a wildcard record";
         };
         instanceDataset = mkOption {
-          type = string;
+          type = types.string;
           description = mdDoc "The ZFS dataset underwhich this flake will store Foundry instances.";
         };
         enableNomadUi = mkOption {
-          type = bool;
+          type = types.bool;
           description = mdDoc "Enable the Nomad UI";
           default = true;
         };
         enableNomadAcl = mkOption {
-          type = bool;
+          type = types.bool;
           description = mdDoc "Enable the Nomad ACL - highly recommended to leave this on";
           default = true;
         };
