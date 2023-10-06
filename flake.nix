@@ -86,7 +86,7 @@
       bootstrap-nomad = pkgs.nuenv.writeScriptBin {
         name = "bootstrap-nomad";
         script = ''
-          let config = "/etc/fvtt-mt/provided_settings.json" | open
+          let config = "/etc/fvtt-mt/provided_settings.json" | open | from json
 
           if not ("/root/nomad/bootstrap" | path exists) {
             mkdir "/root/nomad"
