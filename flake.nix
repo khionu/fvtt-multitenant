@@ -86,16 +86,16 @@
       bootstrap-nomad = pkgs.nuenv.writeScriptBin {
         name = "bootstrap-nomad";
         script = ''
-          let config = open /etc/fvtt-mt/provided_settings.json
+          let config = "/etc/fvtt-mt/provided_settings.json" | open
 
-          if not (/root/nomad/bootstrap | path exists) {
-            mkdir /root/nomad
+          if not ("/root/nomad/bootstrap" | path exists) {
+            mkdir "/root/nomad"
             ${pkgs.nomad}/bin/nomad acl bootstrap |
               lines | parse '{name} = {value}' | str trim | transpose -rd |
-              to json | save -f /root/nomad/bootstrap
+              to json | save -f "/root/nomad/bootstrap"
           }
 
-          $env.NOMAD_TOKEN = (/root/nomad/bootstrap | open | get "Secret ID")
+          $env.NOMAD_TOKEN = ("/root/nomad/bootstrap" | open | get "Secret ID")
 
 
           if ($config | get "nomadEnableAcl") {
