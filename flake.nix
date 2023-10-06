@@ -60,7 +60,7 @@
         };
 
         environment.etc."fvtt-mt/provided_settings.json" = {
-          text = builtins.toJson config.fvtt-multi;
+          text = builtins.toJSON config.fvtt-multi;
           mode = "0444";
         };
         environment.etc."fvtt-mt/Caddyfile.tpl" = {
