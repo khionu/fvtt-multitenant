@@ -99,7 +99,7 @@
 
 
           if ($config | get "nomadEnableAcl") {
-            let policies = nomad acl policy list -json | from json
+            let policies = (nomad acl policy list -json | from json)
           }
         '';
       };
